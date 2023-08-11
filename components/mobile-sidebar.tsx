@@ -1,12 +1,21 @@
 'use client'
 
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Bars3Icon } from '@heroicons/react/24/outline'
 import { Sheet, SheetContent, SheetTrigger } from './ui/sheet'
 import Sidebar from './sidebar'
 
 const MobileSidebar = () => {
+
+    const [isMounted,setIsMounted] = useState(false);
+
+    useEffect(() => {
+        setIsMounted(true)
+    },[])
+
+    if(!isMounted) return;
+
   return (
     <Sheet>
         <SheetTrigger>
