@@ -20,7 +20,13 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import { Empty } from "@/components/ui/empty";
 import { Loader } from "@/components/ui/loader";
-import { Select, SelectTrigger, SelectValue,SelectContent,SelectItem } from "@/components/ui/select";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
 import { Card, CardFooter } from "@/components/ui/card";
 import Image from "next/image";
 
@@ -42,11 +48,11 @@ const ImagePage = () => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       setImages([]);
-      const res = await axios.post("/api/image", { 
-        prompt:values.prompt,
-        amount:values.amount,
-        resolution:values.resolution
-       });
+      const res = await axios.post("/api/image", {
+        prompt: values.prompt,
+        amount: values.amount,
+        resolution: values.resolution,
+      });
       const urls = res.data.map((image: { url: string }) => image.url);
       setImages(urls);
       form.reset();
@@ -108,7 +114,11 @@ const ImagePage = () => {
                       </FormControl>
                       <SelectContent>
                         {amountOptions.map((option) => (
-                          <SelectItem defaultValue={option.value} key={option.value} value={option.value}>
+                          <SelectItem
+                            defaultValue={option.value}
+                            key={option.value}
+                            value={option.value}
+                          >
                             {option.label}
                           </SelectItem>
                         ))}
@@ -135,7 +145,11 @@ const ImagePage = () => {
                       </FormControl>
                       <SelectContent>
                         {resolutionOptions.map((option) => (
-                          <SelectItem defaultValue={option.value} key={option.value} value={option.value}>
+                          <SelectItem
+                            defaultValue={option.value}
+                            key={option.value}
+                            value={option.value}
+                          >
                             {option.label}
                           </SelectItem>
                         ))}
@@ -144,9 +158,14 @@ const ImagePage = () => {
                   </FormItem>
                 )}
               />
-              <Button className="col-span-12 lg:col-span-2 w-full" type="submit" disabled={isLoading} size="icon">
-              Generate
-            </Button>
+              <Button
+                className="col-span-12 lg:col-span-2 w-full"
+                type="submit"
+                disabled={isLoading}
+                size="icon"
+              >
+                Generate
+              </Button>
             </form>
           </Form>
         </div>
@@ -164,13 +183,17 @@ const ImagePage = () => {
             {images.map((image) => (
               <Card key={image} className="rounded-lg overflow-hidden">
                 <div className="relative aspect-square">
-                  <Image alt="image" fill src={image}/>
+                  <Image alt="image" fill src={image} />
                 </div>
                 <CardFooter className="p-2">
-                    <Button onClick={() => window.open(image)} variant="secondary" className="w-full">
-                      <ArrowDownIcon className="mr-2 h-4 w-4"/>
-                      Download
-                    </Button>
+                  <Button
+                    onClick={() => window.open(image)}
+                    variant="secondary"
+                    className="w-full"
+                  >
+                    <ArrowDownIcon className="mr-2 h-4 w-4" />
+                    Download
+                  </Button>
                 </CardFooter>
               </Card>
             ))}
