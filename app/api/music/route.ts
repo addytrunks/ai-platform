@@ -28,7 +28,7 @@ export const POST = async (req: Request) => {
 
     return NextResponse.json(response)
   } catch (error) {
-    console.log("[IMAGE_ERROR]", error);
+    console.log("[MUSIC_ERROR]", error);
     return NextResponse.json("Internal Server Error", { status: 500 });
   }
 };
