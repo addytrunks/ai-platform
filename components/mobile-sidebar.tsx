@@ -6,7 +6,11 @@ import { Bars3Icon } from '@heroicons/react/24/outline'
 import { Sheet, SheetContent, SheetTrigger } from './ui/sheet'
 import Sidebar from './sidebar'
 
-const MobileSidebar = () => {
+interface MobileSidebarProps{
+    apiLimitCount:number
+}
+
+const MobileSidebar = ({apiLimitCount}:MobileSidebarProps) => {
 
     const [isMounted,setIsMounted] = useState(false);
 
@@ -24,7 +28,7 @@ const MobileSidebar = () => {
             </Button>
         </SheetTrigger>
         <SheetContent side='left' className='p-0'>
-            <Sidebar/>
+            <Sidebar apiLimitCount={apiLimitCount}/>
         </SheetContent>
     </Sheet>
   )

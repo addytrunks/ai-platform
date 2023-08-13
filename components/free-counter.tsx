@@ -4,6 +4,7 @@ import { MAX_FREE_COUNTS } from '@/lib/utils'
 import { Progress } from '@/components/ui/progress'
 import { Button } from '@/components/ui/button'
 import { BoltIcon } from '@heroicons/react/24/outline'
+import { useProModal } from '@/hooks/use-pro-modal'
 
 interface FreeCounterProps{
     apiLimitCount:number
@@ -11,6 +12,7 @@ interface FreeCounterProps{
 
 const FreeCounter = ({apiLimitCount}:FreeCounterProps) => {
 
+    const {onOpen} = useProModal()
     const [isMounted,setIsMounted] = useState(false)
 
     useEffect(() => {
@@ -27,7 +29,7 @@ const FreeCounter = ({apiLimitCount}:FreeCounterProps) => {
                     <p>{apiLimitCount}/{MAX_FREE_COUNTS} Free Generations</p>
                     <Progress className='h-3 ' value={(apiLimitCount/MAX_FREE_COUNTS)*100}/>
                 </div>
-                <Button className='w-full' variant='premium'>
+                <Button className='w-full' variant='premium' onClick={onOpen}>
                     Upgrade
                     <BoltIcon className='w-4 h-4 ml-2 fill-white'/>
                 </Button>
