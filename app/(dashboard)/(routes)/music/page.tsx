@@ -14,9 +14,11 @@ import { useRouter } from "next/navigation";
 import axios from 'axios'
 import { Empty } from "@/components/ui/empty";
 import {Loader} from "@/components/ui/loader";
+import { useProModal } from "@/hooks/use-pro-modal";
 
 const MusicPage = () => {
 
+  const {onOpen} = useProModal()
   const router = useRouter()
   const [music,setMusic] = useState<string|undefined>("")
 
@@ -35,8 +37,8 @@ const MusicPage = () => {
       const res = await axios.post('/api/music',values);
       setMusic(res.data.audio)
       form.reset()
-    } catch (error) {
-      console.log(error);
+    } catch (error:any) {
+      if(error?.response?.status === 403) onOpen();
     }finally{
       router.refresh()
     }
