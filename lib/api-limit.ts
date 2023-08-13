@@ -32,7 +32,7 @@ export const increaseApiLimit = async () => {
   }
 };
 
-export const checkApiList = async () => {
+export const checkApiLimit = async () => {
   const { userId } = auth();
 
   if (!userId) return false;
