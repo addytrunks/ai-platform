@@ -1,5 +1,6 @@
 import { checkApiLimit, increaseApiLimit } from "@/lib/api-limit";
 import { replicate } from "@/lib/replicate";
+import { checkSubscriptions } from "@/lib/subscription";
 import { auth } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
 
@@ -19,8 +20,9 @@ export const POST = async (req: Request) => {
     if (!prompt) return new NextResponse("Prompt is required", { status: 400 });
 
     const freeTrial = await checkApiLimit();
+    const isPro = await checkSubscriptions();
 
-    if (freeTrial === false)
+    if (freeTrial === false && !isPro)
       return new NextResponse("Free trial has expired", { status: 403 });
 
     const response = await replicate.run(
@@ -32,7 +34,9 @@ export const POST = async (req: Request) => {
       }
     );
 
-    await increaseApiLimit();
+    if(!isPro){
+      await increaseApiLimit();
+    }
 
     return NextResponse.json(response);
   } catch (error) {
