@@ -7,24 +7,35 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { formSchema } from "./constants";
-import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import axios from 'axios'
+import axios from "axios";
 import { ChatCompletionRequestMessage } from "openai";
 import { Empty } from "@/components/ui/empty";
-import {Loader} from "@/components/ui/loader";
+import { Loader } from "@/components/ui/loader";
 import { cn } from "@/lib/utils";
 import UserAvatar from "@/components/user-avatar";
 import BotAvatar from "@/components/bot-avatar";
 import { useProModal } from "@/hooks/use-pro-modal";
+import ReactMarkdown from "react-markdown";
+
+type Message = {
+  role: string;
+  parts: string | any;
+};
 
 const ConversationPage = () => {
-
-  const router = useRouter()
-  const [messages,setMessages] = useState<ChatCompletionRequestMessage[]>([])
-  const {onOpen} = useProModal()
+  const router = useRouter();
+  const [messages, setMessages] = useState<Message[]>([]);
+  const { onOpen } = useProModal();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -37,23 +48,27 @@ const ConversationPage = () => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      const userMessage:ChatCompletionRequestMessage = {
-        role:'user',
-        content:values.prompt,
-      }
-      const newMessages = [...messages,userMessage]
-      
-      const res = await axios.post('/api/conversation',{
-        messages:newMessages
+      const response = await axios.post("/api/conversation", {
+        prompt: values.prompt,
+        messages,
       });
-
-      setMessages((curr) => [...curr,userMessage,res.data])
-
-      form.reset()
-    } catch (error:any) {
-      if(error?.response?.status === 403) onOpen();
-    }finally{
-      router.refresh()
+      const data = await response.data;
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        {
+          role: "user",
+          parts: [{text:values.prompt}],
+        },
+        {
+          role: "model",
+          parts: [{text:data}],
+        },
+      ]);
+      form.reset();
+    } catch (error: any) {
+      if (error?.response?.status === 403) onOpen();
+    } finally {
+      router.refresh();
     }
   };
 
@@ -86,11 +101,16 @@ const ConversationPage = () => {
                         {...field}
                       />
                     </FormControl>
-                    <FormMessage/>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
-              <Button className="col-span-12 lg:col-span-2 w-full" disabled={isLoading}>Generate</Button>
+              <Button
+                className="col-span-12 lg:col-span-2 w-full"
+                disabled={isLoading}
+              >
+                Generate
+              </Button>
             </form>
           </Form>
         </div>
@@ -98,22 +118,45 @@ const ConversationPage = () => {
         <div className="space-y-4 mt-4">
           {isLoading && (
             <div className="p-8 rounded-lg w-full flex items-center justify-center bg-muted">
-              <Loader/>
+              <Loader />
             </div>
           )}
           {messages.length === 0 && !isLoading && (
-            <Empty label="No conversation started"/>
+            <Empty label="No conversation started" />
           )}
-            <div className="flex flex-col-reverse gap-y-4">
-                  {messages.map((message) => (
-                    <div key={message.content} className={cn("p-8 w-full flex items-start gap-x-8 rounded-lg",message.role === 'user' ? 'bg-white border border-black/10': "bg-muted")}>
-                      {message.role === 'user' ? <UserAvatar/> : <BotAvatar/>}
-                      <p className="text-sm">
+          <div className="flex flex-col-reverse gap-y-4">
+            {messages.map((message) => (
+              <div
+                key={message.parts}
+                className={cn(
+                  "p-8 w-full flex items-start gap-x-8 rounded-lg",
+                  message.role === "user"
+                    ? "bg-white border border-black/10"
+                    : "bg-muted"
+                )}
+              >
+                {message.role === "user" ? <UserAvatar /> : <BotAvatar />}
+                {/* <p className="text-sm">
                         {message.content}
-                      </p>
-                    </div>
-                  ))}
-            </div>
+                      </p> */}
+                <ReactMarkdown
+                  components={{
+                    pre: ({ node, ...props }) => (
+                      <div className="overflow-auto w-full my-2 bg-black/10 p-2 rounded-md">
+                        <pre {...props} />
+                      </div>
+                    ),
+                    code: ({ node, ...props }) => (
+                      <code className="bg-black/10 rounded-md p-1" {...props} />
+                    ),
+                  }}
+                  className="text-sm overflow-hidden leading-7"
+                >
+                  {message.parts[0].text}
+                </ReactMarkdown>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>
