@@ -18,7 +18,6 @@ export const LandingHero = () => {
             options={{
               strings: [
                 "Chatbot.",
-                "Photo Generation.",
                 "Blog Writing.",
                 "Mail Writing."
               ],

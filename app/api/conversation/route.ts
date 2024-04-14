@@ -1,6 +1,5 @@
 import { checkApiLimit, increaseApiLimit } from "@/lib/api-limit";
 import { genai } from "@/lib/genai";
-import { openai } from "@/lib/openai";
 import { checkSubscriptions } from "@/lib/subscription";
 import { auth } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
@@ -12,9 +11,6 @@ export const POST = async (req: Request) => {
     const { userId } = auth();
 
     if (!userId) return new NextResponse("Unauthorized", { status: 401 });
-
-    if (!openai)
-      return new NextResponse("No Open AI API key configured", { status: 500 });
 
     if (!messages)
       return new NextResponse("Messages are required", { status: 400 });
