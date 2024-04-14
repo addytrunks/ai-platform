@@ -37,13 +37,6 @@ export const tools = [
     bgColor: "bg-orange-700/10",
     href: '/video',
   },
-  {
-    label: 'Code Generation',
-    icon: CodeBracketIcon,
-    color: "text-green-700",
-    bgColor: "bg-green-700/10",
-    href: '/code',
-  },
 ];
 
 export const absoulteUrl = (path:string) => {

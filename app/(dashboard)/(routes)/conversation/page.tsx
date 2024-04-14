@@ -18,7 +18,6 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-import { ChatCompletionRequestMessage } from "openai";
 import { Empty } from "@/components/ui/empty";
 import { Loader } from "@/components/ui/loader";
 import { cn } from "@/lib/utils";

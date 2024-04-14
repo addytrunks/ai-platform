@@ -1,7 +1,7 @@
 "use client"
 
 import { cn } from "@/lib/utils"
-import { ChatBubbleLeftIcon, CodeBracketIcon, Cog6ToothIcon, MusicalNoteIcon, PhotoIcon, RectangleGroupIcon, VideoCameraSlashIcon } from "@heroicons/react/24/outline";
+import { ChatBubbleLeftIcon, Cog6ToothIcon, MusicalNoteIcon, PhotoIcon, RectangleGroupIcon, VideoCameraSlashIcon } from "@heroicons/react/24/outline";
 import { Montserrat } from "next/font/google";
 import Image from "next/image"
 import Link from "next/link"
@@ -40,12 +40,6 @@ const routes = [
       icon: MusicalNoteIcon,
       color: "text-emerald-500",
       href: '/music',
-    },
-    {
-      label: 'Code Generation',
-      icon: CodeBracketIcon,
-      color: "text-green-700",
-      href: '/code',
     },
     {
       label: 'Settings',
